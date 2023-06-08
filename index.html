@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Dom Event Tong Hop</title>
+      <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+      <div class="container">
+            <h1>Rikkei Academy - Dom & Event - Thực hành tổng hợp</h1>
+            <h2>Rikkei Academy</h2>
+            <!-- --------Student information------- -->
+            <form action="#" method="get" enctype="text/plain">
+                  <h3>Thông tin học viên</h3>
+                  <div class="student__info">
+                        <label for="fname">Họ và tên</label>
+                        <input type="text" name="fname" id="fname" placeholder="vui lòng nhập tên"/>
+                  </div>
+                  <div class="student__info">
+                        <label for="email">Email</label>
+                        <input type="text" name="email" id="email" placeholder="vui lòng nhập email"/>
+                  </div>
+                  <div class="student__info">
+                        <label for="phone">Số điện thoại</label>
+                        <input type="text" name="phone" id="phone" placeholder="vui lòng nhập số điện thoại"/>
+                  </div>
+                  <div class="student__info">
+                        <label for="address">Quê quán</label>
+                        <input type="text" name="address" id="address" placeholder="vui lòng nhập địa chỉ quê quán"/>
+                  </div>
+                  <div class="student__info">
+                        <label>Giới tính</label>
+                        <div class="student--gender">
+                              <input type="radio" name="gender" id="rbMale" checked/>
+                              <label for="rbMale">Nam</label>
+                              <input type="radio" name="gender" id="rbFemale" />
+                              <label for="rbFemale">Nữ</label>
+                        </div>
+                  </div>
+                  <button type="button" id="btnSave">Lưu lại</button>
+            </form>
+
+            <!-- ------Student list------- -->
+            <div class="student__list">
+                  <h3>Danh sách học viên</h3>
+                  <div class="student--search">
+                        <label for="searchStudent">Tìm kiếm học viên</label>
+                        <input type="text" name="searchStudent" id="searchStudent" />
+                        <button type="button" id="btnSearch">Search</button>
+                  </div>
+                  <table>
+                        <thead>
+                              <tr>
+                                    <th>#</th>
+                                    <th>Họ tên</th>
+                                    <th>Email</th>
+                                    <th>Điện thoại</th>
+                                    <th>Địa chỉ</th>
+                                    <th>Gender</th>
+                                    <th>Hành động</th>
+                                    <th><button type="button" id="btnArrange">Sắp xếp (alpha b)</button></th>
+                              </tr>
+                        </thead>
+                        <tbody></tbody>
+                  </table>
+            </div>
+      </div>
+      <script src="/main.js"></script>
+</body>
+
+</html>
