@@ -1,67 +1,128 @@
-//1. Validate data & import vào table list student
-
-const tbody = document.querySelector("tbody");
+const studentId = document.getElementById("studentId");
 const fname = document.getElementById("fname");
 const email = document.getElementById("email");
 const phone = document.getElementById("phone");
 const address = document.getElementById("address");
 
-const rbMale = document.getElementById("rbMale");
-const rbFemale = document.getElementById("rbFemale");
+function validateInput() {
+      const rgEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+      const rgPhone = /(84|0[3|5|7|8|9])+([0-9]{8})\b/g;
+      if (!studentId.value.startsWith("SV")) {
+            alert("Mã sinh viên phải bắt đầu bằng SV");
+            return false;
+      }
+      if (fname.value == "") {
+            alert("Họ và tên không để trống");
+            return false;
+      }
+      if (!rgEmail.test(email.value)) {
+            alert("Email không đúng định dạng");
+            return false;
+      }
+      if (!rgPhone.test(phone.value)) {
+            alert("Số điện thoại không đúng định dạng số điện thoại Việt Nam");
+            return false;
+      }
+      if (address.value == "") {
+            alert("Địa chỉ không để trống");
+            return false;
+      }
+      return true;
+}
 
+const data = [];
+const tbody = document.querySelector("tbody");
+function renderData() {
+      tbody.innerHTML = "";
+      for (let i = 0; i < data.length; i++) {
+            tbody.innerHTML += 
+            `<tr>
+            <td>${i+1}</td>
+            <td>${data[i][0]}</td>
+            <td>${data[i][1]}</td>
+            <td>${data[i][2]}</td>
+            <td>${data[i][3]}</td>
+            <td>${data[i][4]}</td>
+            <td>${data[i][5]}</td>
+            <td>
+                  <i class="fa-solid fa-pen" onclick="editStudent('${data[i][0]}')"></i>
+                  <i class="fa-solid fa-trash-can" onclick="deleteStudent(this)"></i>
+            </td>
+      </tr>`;
+      }
+}
+let action = "addNew";
 const btnSave = document.getElementById("btnSave");
+btnSave.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (validateInput()) {
+            let index = getRowIndex(studentId.value);
+            if (action == "edit") {
+                  data[index][0] = studentId.value;
+                  data[index][1] = fname.value;
+                  data[index][2] = email.value;
+                  data[index][3] = phone.value;
+                  data[index][4] = address.value;
+                  data[index][5] = document.querySelector("input[name='gender']:checked").value;
+                  studentId.readOnly = false;
+                  renderData();
+                  resetForm();
+            }
+            else {
+                  if (index >= 0) {
+                        alert("Đã tồn tại mã sinh viên này trong danh sách");
+                  } else {
+                        const gender = document.querySelector("input[name='gender']:checked");
+                        data.push([studentId.value, fname.value,
+                        email.value, phone.value, address.value, gender.value]);
+                        renderData();
+                        resetForm();
+                  }
+            } 
+      }
+});
 
-let rgEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-let rgPhone = /((09|03|07|08|05)+([0-9]{8})\b)/g;
-
-function checkInput() {
-	let gender = "";
-	let student = [];
-      let countChild = tbody.children.length;
-	if (fname.value == null || fname.value == "") {
-		alert("Họ tên không được để trống. Vui lòng nhập họ tên");
-	} else if (!email.value.match(rgEmail)) {
-		alert("Email không đúng định dạng. Vui lòng nhập lại");
-	} else if (!phone.value.match(rgPhone)) {
-		alert("Vui lòng nhập đúng định dạng số điện thoại Việt Nam");
-	} else if (address.value == "" || address.value == null) {
-		alert("Địa chỉ không được để trống. Vui lòng nhập đầy đủ");
-	} else {
-		if (rbMale.checked) gender = "Nam";
-		else gender = "Nữ";
-		student.push(countChild + 1 , fname.value, email.value, 
-                  phone.value, address.value, gender);
-            return student;
-	}
+function editStudent(id) {
+      let index = getRowIndex(id);
+      if (index >=0) {
+            studentId.value = data[index][0];
+            fname.value = data[index][1];
+            email.value = data[index][2];
+            phone.value = data[index][3];
+            address.value = data[index][4];
+            
+            if (data[index][5] == "Nam") {
+                  document.querySelector("input[value='Nam']").checked = true;
+            } else
+            document.querySelector("input[value='Nữ']").checked = true;
+            action = "edit";
+            studentId.readOnly = true;
+      }
 }
 
-function addStudents(student) {
-	const tr = document.createElement("tr");
-	for (const item of student) {
-		const td = document.createElement("td");
-		td.innerText = item;
-		tr.appendChild(td);
-	}
-
-      const tdEdit = document.createElement("td");
-      tdEdit.innerHTML = `<a href="#" class="edit">Edit</a> | <a href="#" class="delete">Delete</a>`;
-      tr.appendChild(tdEdit);
-
-      tbody.appendChild(tr);
+function getRowIndex(id) {
+      for (let i = 0; i < data.length; i++) {
+           if (id == data[i][0]) {
+                  return i;
+           }
+      }
+      return -1;
 }
 
-btnSave.addEventListener("click", () => {
-      let student = checkInput();
-      addStudents(student);
-})
+function resetForm() {
+      studentId.value = "";
+      fname.value = "";
+      email.value = "";
+      phone.value = "";
+      address.value = "";
+      document.querySelector("input[value='Nam']").checked = true;
+      selectedRow = null;
+}
 
-// 2. Nhấn Delete --> xóa student
-
-const btnDeletes = document.querySelectorAll("a[class='delete']");
-console.log(btnDeletes); // --> Thầy xem giúp em đoạn này ---> length : 0 
-btnDeletes.forEach(function(btnDel) {
-      btnDel.addEventListener("click", () => {
-            let row = btnDel.parentNode.parentNode;
-            row.parentNode.removeChild(row);
-      })
-})
+function deleteStudent(td) {
+      if (confirm("Do you want to delete this student ?")) {
+            selectedRow = td.parentElement.parentElement;
+            const table = document.querySelector("table");
+            table.deleteRow(selectedRow.rowIndex);
+      }
+}
